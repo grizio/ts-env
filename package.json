@@ -1,0 +1,46 @@
+{
+  "name": "ts-env",
+  "version": "0.1.0",
+  "sideEffects": false,
+  "description": "Load configuration in typescript through environment variables",
+  "main": "commonjs/index.js",
+  "module": "es/index.js",
+  "typings": "commonjs/index.d.ts",
+  "scripts": {
+    "build": "npm run build-es && npm run build-commonjs",
+    "build-es": "tsc src/index.ts --outDir es --strict --noUnusedParameters --declaration --lib dom,es5,es6 --module es6 --target es6 --moduleResolution node",
+    "build-commonjs": "tsc src/index.ts --outDir commonjs --strict --noUnusedParameters --declaration --lib dom,es5,es6 --target es5",
+    "test": "ts-mocha --exit --project ./tsconfig.json test/**/*.spec.ts"
+  },
+  "files": [
+    "commonjs",
+    "es"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/grizio/ts-env.git"
+  },
+  "keywords": [
+    "typescript",
+    "environment",
+    "variable"
+  ],
+  "author": "Gaëtan Rizio",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/grizio/ts-env/issues"
+  },
+  "homepage": "https://github.com/grizio/ts-env#readme",
+  "devDependencies": {
+    "@types/chai": "4.2.19",
+    "@types/mocha": "8.2.2",
+    "@types/node": "15.12.4",
+    "chai": "4.3.4",
+    "mocha": "8.4.0",
+    "ts-mocha": "8.0.0",
+    "typescript": "4.3.4"
+  },
+  "dependencies": {
+    "idonttrustlikethat": "2.0.2"
+  }
+}
