@@ -1,4 +1,4 @@
-# ts-env
+# ts-env-loader
 
 Load configuration in typescript through environment variables
 
@@ -7,13 +7,13 @@ Load configuration in typescript through environment variables
 ### Install
 
 ```
-npm install --save ts-env
+npm install --save ts-env-loader
 ```
 
 ### Usage
 
 ```typescript
-import * as env from "ts-env"
+import * as env from "ts-env-loader"
 
 env.load({
   database: {

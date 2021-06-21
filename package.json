@@ -1,5 +1,5 @@
 {
-  "name": "ts-env",
+  "name": "ts-env-loader",
   "version": "0.1.0",
   "sideEffects": false,
   "description": "Load configuration in typescript through environment variables",
