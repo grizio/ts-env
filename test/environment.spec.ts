@@ -81,4 +81,27 @@ describe("environment", () => {
       json: rawJson
     })
   })
+
+  it("should return the loaded environment into a Result when valid and mode 'return'", () => {
+    const raw = { value: "value" }
+    const result = env.load(raw, { mode: "return" })
+    expect(result).to.deep.equal({
+      ok: true,
+      value: raw
+    })
+  })
+
+  it("should return an error into a Result when valid and mode 'return' (instead of throw)", () => {
+    const raw = { value: env.string("UNKNOWN") }
+    const result = env.load(raw, { mode: "return" })
+    expect(result).to.deep.equal({
+      ok: false,
+      errors: [
+        {
+          message: "Expected string, got undefined",
+          path: "value"
+        }
+      ]
+    })
+  })
 })
