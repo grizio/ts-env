@@ -76,7 +76,7 @@ It can be useful in very specific cases if you need to accumulate errors with ot
 
 ### Dotenv support
 
-If you want to use dotenv, install it:
+If you want to use [dotenv](https://github.com/motdotla/dotenv), install it:
 
 ```
 npm install --save dotenv
@@ -102,7 +102,7 @@ env.load({
 Configure `when` so the loader know when to call dotenv:
 
 * `always`: always call dotenv
-* `not-production`: always call dotenv except in production
+* `not-production`: always call dotenv **except** in production
 * `() => boolean`: call dotenv when the given function returns `true`
 
 `config` is a `DotenvConfigOptions` so we let you look at [its documentation](https://github.com/motdotla/dotenv#options).
