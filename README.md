@@ -18,13 +18,12 @@ import * as env from "ts-env-loader"
 env.load({
   database: {
     host: env.string("DATABASE_HOST"),
-    port: env.int("DATABASE_PORT").default(5432),
+    port: env.int("DATABASE_PORT"),
     username: env.string("DATABASE_USERNAME"),
     password: env.string("DATABASE_PASSWORD"),
     schema: env.string("DATABASE_SCHEMA")
   },
-  testMode: env.boolean("TEST_MODE"),
-  workers: env.int("WORKERS")
+  testMode: env.boolean("TEST_MODE")
 })
 ```
 
@@ -32,11 +31,11 @@ For following configuration (.env file):
 
 ```properties
 DATABASE_HOST = host
+DATABASE_PORT = 5432
 DATABASE_USERNAME = username
 DATABASE_PASSWORD = password
 DATABASE_SCHEMA = schema
 TEST_MODE = true
-WORKERS = 17
 ```
 
 The result will be:
@@ -45,15 +44,35 @@ The result will be:
 {
   database: {
     host: "host",
-    port: 5432, // The default value because the environment variable was not set
+    port: 5432,
     username: "username",
     password: "password",
     schema: "schema"
   },
-  testMode: true,
-  workers: 17
+  testMode: true
 }
 ```
+
+### Safe mode
+
+By default, the library throws when an environment variable does not exist or has an invalid format.
+However, if you want to catch errors, you can use the safe mode:
+
+```typescript
+const result = env.loadSafe({ variable: env.string("VARIABLE") })
+if (result.ok) {
+  const config = result.value
+  // launch the application
+} else {
+  const errors: Array<{ message: string, path: string }> = result.errors
+  // display errors or do whatever you need
+}
+```
+
+In the majority of cases, you do not need to use this safe mode.
+You want to stop the application when starting if some configuration is missing to avoid lazy crashes.
+
+It can be useful in very specific cases if you need to accumulate errors with other systems before crashing.
 
 ### Dotenv support
 

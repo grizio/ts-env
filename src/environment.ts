@@ -2,11 +2,9 @@ import * as v from "idonttrustlikethat"
 import { Variable } from "./variable"
 import type { DotenvConfigOptions } from "dotenv"
 
-export type Option<_Mode extends Mode = Mode> = {
-  mode?: _Mode
+export type Option = {
   dotenv?: DotenvOption
 }
-type Mode = "throw" | "return"
 type DotenvOption = {
   when: "always" | "not-production" | (() => boolean)
   config?: DotenvConfigOptions
@@ -20,24 +18,23 @@ type Result<Config> = {
   : Result<Config[P]>
 }
 
-export function load<Config>(config: Config): Result<Config>
-export function load<Config>(config: Config, option: Option<"throw">): Result<Config>
-export function load<Config>(config: Config, option: Option<"return">): v.Validation<Result<Config>>
-export function load<Config>(config: Config, option?: Option): Result<Config> | v.Validation<Result<Config>> {
+export function load<Config>(config: Config, option?: Option): Result<Config> {
+  const result = loadSafe(config, option)
+  if (result.ok) {
+    return result.value
+  } else {
+    throw new Error(`Could not load environment variables: ${JSON.stringify(result.errors)}`)
+  }
+}
+
+export function loadSafe<Config>(config: Config, option?: Option): v.Validation<Result<Config>> {
   if (option?.dotenv !== undefined) {
     loadDotenv(option.dotenv)
   }
 
   const data = loadData(config)
   const validator = buildValidator(config) as v.Validator<Result<Config>>
-  const result = validator.validate(data)
-  if (option?.mode === "return") {
-    return result
-  } else if (result.ok) {
-    return result.value
-  } else {
-    throw new Error(`Could not load environment variables: ${JSON.stringify(result.errors)}`)
-  }
+  return validator.validate(data)
 }
 
 function loadDotenv(option: DotenvOption): void {

@@ -82,18 +82,18 @@ describe("environment", () => {
     })
   })
 
-  it("should return the loaded environment into a Result when valid and mode 'return'", () => {
+  it("should return the loaded environment into a Result when using `loadSafe`", () => {
     const raw = { value: "value" }
-    const result = env.load(raw, { mode: "return" })
+    const result = env.loadSafe(raw)
     expect(result).to.deep.equal({
       ok: true,
       value: raw
     })
   })
 
-  it("should return an error into a Result when valid and mode 'return' (instead of throw)", () => {
+  it("should return an error into a Result when valid and using `loadSafe`", () => {
     const raw = { value: env.string("UNKNOWN") }
-    const result = env.load(raw, { mode: "return" })
+    const result = env.loadSafe(raw)
     expect(result).to.deep.equal({
       ok: false,
       errors: [
