@@ -18,7 +18,7 @@ import * as env from "ts-env-loader"
 env.load({
   database: {
     host: env.string("DATABASE_HOST"),
-    port: env.int("DATBASE_PORT").default(5432),
+    port: env.int("DATABASE_PORT").default(5432),
     username: env.string("DATABASE_USERNAME"),
     password: env.string("DATABASE_PASSWORD"),
     schema: env.string("DATABASE_SCHEMA")
@@ -54,3 +54,36 @@ The result will be:
   workers: 17
 }
 ```
+
+### Dotenv support
+
+If you want to use dotenv, install it:
+
+```
+npm install --save dotenv
+```
+
+Then add the following configuration:
+
+```typescript
+import * as env from "ts-env-loader"
+
+env.load({
+  someString: env.string("XXX_SOME_STRING")
+}, {
+  dotenv: {
+    when: "not-production",
+    config: {
+      path: path.join(__dirname, "test.env")
+    }
+  }
+})
+```
+
+Configure `when` so the loader know when to call dotenv:
+
+* `always`: always call dotenv
+* `not-production`: always call dotenv except in production
+* `() => boolean`: call dotenv when the given function returns `true`
+
+`config` is a `DotenvConfigOptions` so we let you look at [its documentation](https://github.com/motdotla/dotenv#options).

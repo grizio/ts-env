@@ -1,9 +1,15 @@
 import * as v from "idonttrustlikethat"
-import { variable, Variable } from "./variable"
+import { Variable } from "./variable"
+import type { DotenvConfigOptions } from "dotenv"
 
+export type Option<_Mode extends Mode = Mode> = {
+  mode?: _Mode
+  dotenv?: DotenvOption
+}
 type Mode = "throw" | "return"
-type Option<_Mode extends Mode = Mode> = {
-  mode: _Mode
+type DotenvOption = {
+  when: "always" | "not-production" | (() => boolean)
+  config?: DotenvConfigOptions
 }
 
 type Result<Config> = {
@@ -18,6 +24,10 @@ export function load<Config>(config: Config): Result<Config>
 export function load<Config>(config: Config, option: Option<"throw">): Result<Config>
 export function load<Config>(config: Config, option: Option<"return">): v.Validation<Result<Config>>
 export function load<Config>(config: Config, option?: Option): Result<Config> | v.Validation<Result<Config>> {
+  if (option?.dotenv !== undefined) {
+    loadDotenv(option.dotenv)
+  }
+
   const data = loadData(config)
   const validator = buildValidator(config) as v.Validator<Result<Config>>
   const result = validator.validate(data)
@@ -26,7 +36,19 @@ export function load<Config>(config: Config, option?: Option): Result<Config> | 
   } else if (result.ok) {
     return result.value
   } else {
-    throw `Could not load environment variables: ${JSON.stringify(result.errors)}`
+    throw new Error(`Could not load environment variables: ${JSON.stringify(result.errors)}`)
+  }
+}
+
+function loadDotenv(option: DotenvOption): void {
+  if (option.when === "always") {
+    require("dotenv").config(option.config)
+  } else if (option.when === "not-production") {
+    if (process.env.NODE_ENV !== "production") {
+      require("dotenv").config(option.config)
+    }
+  } else if (option.when()) {
+    require("dotenv").config(option.config)
   }
 }
 
