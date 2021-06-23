@@ -1,6 +1,6 @@
 {
   "name": "ts-env-loader",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "sideEffects": false,
   "description": "Load configuration in typescript through environment variables",
   "main": "commonjs/index.js",
