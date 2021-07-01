@@ -3,7 +3,14 @@ import { object, string, array, number } from "idonttrustlikethat"
 import * as env from "../src"
 
 describe("environment", () => {
+  let baseNodeEnv: string | undefined = undefined
+  beforeEach(() => {
+    baseNodeEnv = process.env.NODE_ENV
+  })
+
   afterEach(() => {
+    process.env.NODE_ENV = baseNodeEnv
+
     for (let key in process.env) {
       if (key.startsWith("XXX_")) {
         delete process.env[key]
@@ -104,4 +111,45 @@ describe("environment", () => {
       ]
     })
   })
+
+  it("should correctly test NODE_ENV value", () => {
+    testNodeEnvValue("development", "development")
+    testNodeEnvValue("dev", "development")
+    testNodeEnvValue("test", "test")
+    testNodeEnvValue("production", "production")
+    testNodeEnvValue("prod", "production")
+
+    process.env.NODE_ENV = "invalid"
+    expect(() => env.load({
+      nodeEnv: env.nodeEnv
+    })).to.throw()
+  })
+
+  function testNodeEnvValue(value: string, expected: string) {
+    process.env.NODE_ENV = value
+    const result = env.load({
+      nodeEnv: env.nodeEnv
+    })
+    expect(result).to.deep.equal({ nodeEnv: expected })
+  }
+
+  it("should correctly test NODE_ENV value (development, test, production)", () => {
+    testNodeEnvCase("development", { isDev: true, isTest: false, isProd: false })
+    testNodeEnvCase("dev", { isDev: true, isTest: false, isProd: false })
+
+    testNodeEnvCase("test", { isDev: false, isTest: true, isProd: false })
+
+    testNodeEnvCase("production", { isDev: false, isTest: false, isProd: true })
+    testNodeEnvCase("prod", { isDev: false, isTest: false, isProd: true })
+  })
+
+  function testNodeEnvCase(nodeEnv: string, expected: { isDev: boolean, isTest: boolean, isProd: boolean }) {
+    process.env.NODE_ENV = nodeEnv
+    const result = env.load({
+      isDev: env.isDevelopment,
+      isTest: env.isTest,
+      isProd: env.isProduction
+    })
+    expect(result).to.deep.equal(expected)
+  }
 })

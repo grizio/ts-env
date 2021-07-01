@@ -240,3 +240,29 @@ export function json<Value>(name: string, validator: v.Validator<Value>): Variab
     }).then(validator)
   )
 }
+
+/**
+ * Shortcut to extract NODE_ENV and ensure it will be either `development`, `test` or `production`.
+ * 
+ * Accepts aliases `dev` and `prod` too.
+ */
+export const nodeEnv: Variable<"development" | "test" | "production"> = string("NODE_ENV").and(value => {
+  if (value === "development" || value === "dev") {
+    return v.Ok("development")
+  } else if (value === "test") {
+    return v.Ok("test")
+  } else if (value === "production" || value === "prod") {
+    return v.Ok("production")
+  } else {
+    return v.Err(`Expected "development", "test" or "production", got "${value}"`)
+  }
+})
+
+/** Shortcut to extract NODE_ENV value and check if it is `development` */
+export const isDevelopment: Variable<boolean> = string("NODE_ENV").map(_ => _ === "development" || _ === "dev")
+
+/** Shortcut to extract NODE_ENV value and check if it is `test` */
+export const isTest: Variable<boolean> = string("NODE_ENV").map(_ => _ === "test")
+
+/** Shortcut to extract NODE_ENV value and check if it is `production` */
+export const isProduction: Variable<boolean> = string("NODE_ENV").map(_ => _ === "production" || _ === "prod")

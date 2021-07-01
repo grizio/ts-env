@@ -289,6 +289,47 @@ TOKENS = ["foo", "bar"]
 The type of `env.json` can be anything, really.
 But please have a though for your coworkers managing your application and avoid abusing of it. 🙏
 
+#### `env.nodeEnv`
+
+Shortcut to test `NODE_ENV` and ensure it will be either `development`, `test` or `production`.
+Accepts aliases `dev` and `prod` too and convert them to `development` and `production` respectively.
+
+```typescript
+const environment = env.load({
+  nodeEnv: env.nodeEnv
+})
+
+// type of environment.nodeEnv: "development" | "test" | "production"
+```
+
+If `NODE_ENV` is anything but accepted values, it will return an error.
+
+#### `env.isDevelopment`, `env.isTest`, `env.isProduction`
+
+Shortcuts to test `NODE_ENV` environment variable and store it as boolean.
+
+```typescript
+// NODE_ENV = "test"
+const environment = env.load({
+  isDev: env.isDevelopment,
+  isTest: env.isTest,
+  isProd: env.isProduction
+})
+expect(result).to.deep.equal({
+  isDev: false,
+  isTest: true,
+  isProd: false
+})
+```
+
+Accepted `NODE_ENV` values for each case:
+
+* `isDevelopment`: `dev` or `development`
+* `isTest`: `test`
+* `isProduction`: `prod` or `production`
+
+These validation never return an error. If you pass `NODE_ENV=foo`, all three variables will be `false`.
+
 #### Validation chaining
 
 If you want to add constraints in your variables, you can chain validations:
