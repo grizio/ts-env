@@ -119,7 +119,7 @@ export class Variable<Value> {
    * 
    * @see {@link https://github.com/AlexGalays/idonttrustlikethat#default | Validator.default}
    */
-  default = (value: Value): Variable<Value> => this.update(this.validator.nullable().default(value))
+  default = (value: Value): Variable<Value> => this.update(this.validator.default(value))
 
   private update = <NextValue>(validator: v.Validator<NextValue>) => new Variable(this.name, validator)
 }

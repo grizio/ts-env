@@ -36,15 +36,15 @@
     "@types/chai": "4.2.19",
     "@types/dotenv": "8.2.0",
     "@types/mocha": "8.2.2",
-    "@types/node": "15.12.4",
+    "@types/node": "15.12.5",
     "chai": "4.3.4",
     "dotenv": "10.0.0",
-    "mocha": "8.4.0",
+    "mocha": "9.0.1",
     "ts-mocha": "8.0.0",
-    "typescript": "4.3.4"
+    "typescript": "4.3.5"
   },
   "dependencies": {
-    "idonttrustlikethat": "2.0.2"
+    "idonttrustlikethat": "2.0.3"
   },
   "optionalDependencies": {
     "dotenv": "10.0.0"
