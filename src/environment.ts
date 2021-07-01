@@ -18,6 +18,38 @@ type Result<Config> = {
   : Result<Config[P]>
 }
 
+/**
+ * Loads environment variables.
+ * 
+ * If there is any issue (missing variable, invalid value…), throws an error.
+ * Accumulate errors before throwing to validate all at once.
+ * 
+ * The resulting type is infered from given configuration.
+ * 
+ * 
+ * @example
+ * ```ts
+ * export const environment = env.load({
+ *   testMode: env.boolean("TEST_MODE"),
+ *   applicationName: "app"
+ * })
+ * ```
+ * 
+ * @example Dotenv support
+ * ```ts
+ * export const environment = env.load({
+ *   someString: env.string("XXX_SOME_STRING")
+ * }, {
+ *   dotenv: {
+ *     when: "not-production",
+ *     config: { path: path.join(__dirname, "test.env") }
+ *   }
+ * })
+ * ```
+ * 
+ * @see {@link https://github.com/grizio/ts-env-loader#envload | More information on README}
+ * @see {@link https://github.com/grizio/ts-env-loader#dotenv-support | More information on dotenv support}
+ */
 export function load<Config>(config: Config, option?: Option): Result<Config> {
   const result = loadSafe(config, option)
   if (result.ok) {
@@ -27,6 +59,13 @@ export function load<Config>(config: Config, option?: Option): Result<Config> {
   }
 }
 
+/**
+ * Loads environment variables.
+ * 
+ * Unlike {@link load}, returns a {@link v.Validation} instead of throwing an error.
+ * 
+ * @see https://github.com/grizio/ts-env-loader#safe-mode
+ */
 export function loadSafe<Config>(config: Config, option?: Option): v.Validation<Result<Config>> {
   if (option?.dotenv !== undefined) {
     loadDotenv(option.dotenv)
