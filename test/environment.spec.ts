@@ -152,4 +152,19 @@ describe("environment", () => {
     })
     expect(result).to.deep.equal(expected)
   }
+
+  it("should check port validation", () => {
+    process.env.XXX_PORT = "1234"
+    const result = env.load({ port: env.port("XXX_PORT") })
+    expect(result).to.deep.equal({ port: 1234 })
+
+    expect(() => {
+      process.env.XXX_PORT = "0"
+      env.load({ port: env.port("XXX_PORT") })
+    }).to.throw()
+    expect(() => {
+      process.env.XXX_PORT = "65536"
+      env.load({ port: env.port("XXX_PORT") })
+    }).to.throw()
+  })
 })

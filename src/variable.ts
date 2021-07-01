@@ -138,7 +138,6 @@ export function string(name: string): Variable<string> {
 export function int(name: string): Variable<number> {
   return variable(name, v.intFromString)
 }
-
 /** Declare an environment variable as any number */
 export function number(name: string): Variable<number> {
   return variable(name, v.numberFromString)
@@ -166,6 +165,11 @@ export function union<AcceptedValues extends Literal[]>(name: string, ...accepte
 /** Declare an environment variable as a date (ISO 8601) */
 export function isoDate(name: string): Variable<Date> {
   return variable(name, v.isoDate)
+}
+
+/** Declare an environment variable as a port number (1-65535) */
+export function port(name: string): Variable<number> {
+  return int(name).filter(value => 1 <= value && value <= 65535)
 }
 
 /**

@@ -238,6 +238,14 @@ Accept a date in ISO format (ex: `2011-10-05T14:48:00.000Z`).
 function isoDate(name: string): Variable<Date>
 ```
 
+#### `env.port`
+
+Accept only port values (int between 1 and 65535)
+
+```typescript
+function port(name: string): Variable<number>
+```
+
 #### `env.relativeUrl`
 
 Accept a relative URL (without `http://`).
