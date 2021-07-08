@@ -44,9 +44,9 @@
     "typescript": "4.3.5"
   },
   "dependencies": {
-    "idonttrustlikethat": "2.0.3"
+    "idonttrustlikethat": "^2.0.3"
   },
   "optionalDependencies": {
-    "dotenv": "10.0.0"
+    "dotenv": "^10.0.0"
   }
 }
